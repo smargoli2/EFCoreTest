@@ -16,7 +16,9 @@ public class PersonDbContext : DbContext
                 entity.ToTable("Person");
             });
 
-        modelBuilder.ApplyConfiguration(new ChangeEntityTestConfiguration<Person, int, string>());
-        //modelBuilder.ApplyConfiguration(new ChangeEntityInfoTestConfiguration<Person, int, string>());
+        // modelBuilder.ApplyConfiguration(new ChangeEntityTestConfiguration<Person, int, string>());
+        // modelBuilder.ApplyConfiguration(new ChangeEntityInfoTestConfiguration<Person, int, string>());
+        modelBuilder.ApplyConfiguration(new ChangeEntityInfoPersonConfiguration());
+        modelBuilder.ApplyConfiguration(new ChangeEntityPersonConfiguration());
     }
 }

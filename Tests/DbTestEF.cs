@@ -60,4 +60,48 @@ public class DbTestEF
             Assert.Equal("John Doe", originalSaved.Name);
         }
     }
+
+    [Fact]
+    public async void AddPerson_ModifyName_FailsNonGeneric()
+    {
+        var person = new Person { Id = 1, Name = "John Doe" };
+        var changeEntity = new ChangeEntityPerson()
+        {
+            Date = DateTime.Now,
+            ChangeEntityInfoPerson = new ChangeEntityInfoPerson()
+            {
+                ChangedEntity = person
+            },
+            UserId = "CurrentUser"
+        };
+
+        using (var context = new PersonDbContext(_options))
+        {
+            context.Database.EnsureCreated();
+        }
+
+        using (var context = new PersonDbContext(_options))
+        {
+            context.Set<Person>().Add(person);
+            context.Add(changeEntity);
+            context.SaveChanges();
+        }
+
+        using (var context = new PersonDbContext(_options))
+        {
+            var change = await context.Set<ChangeEntityPerson>().SingleAsync(x => Equals(changeEntity.Id, x.Id));
+            change.ChangeEntityInfoPerson = await context.Set<ChangeEntityInfoPerson>().SingleAsync(x => Equals(x.Id, changeEntity.Id));
+            var originalSaved = change.GetChangedEntity();
+            originalSaved.Name = "Jane Smith";
+            context.SaveChanges();
+        }
+
+        using (var context = new PersonDbContext(_options))
+        {
+            var change = await context.Set<ChangeEntityPerson>().SingleAsync(x => Equals(changeEntity.Id, x.Id));
+            change.ChangeEntityInfoPerson = await context.Set<ChangeEntityInfoPerson>().SingleAsync(x => Equals(x.Id, changeEntity.Id));
+            var originalSaved = change.GetChangedEntity();
+            Assert.Equal("John Doe", originalSaved.Name);
+        }
+    }
 }

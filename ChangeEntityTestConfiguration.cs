@@ -16,6 +16,6 @@ public class ChangeEntityTestConfiguration<TEntity, TKey, TUserKey> : IEntityTyp
         {
             builder.ToJson("AddressJson");
         });
-        builder.Property(e => e.Address).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+        //builder.Property(e => e.Address).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
     }
 }
