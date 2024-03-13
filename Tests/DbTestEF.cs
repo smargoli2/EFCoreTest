@@ -16,6 +16,7 @@ public class DbTestEF
     public async void AddPerson_ModifyName_Fails()
     {
         var person = new Person { Id = 1, Name = "John Doe" };
+        var address = new Address { Id = 1, Street = "123 Main St", City = "Anytown", State = "NY", ZipCode = "12345" };
         var changeEntity = new ChangeEntityTest<Person, int, string>()
         {
             Date = DateTime.Now,
@@ -23,7 +24,8 @@ public class DbTestEF
             {
                 ChangedEntity = person
             },
-            ObjectId = person.Id,
+            Address = address,
+            AddressId = address.Id,
             UserId = "CurrentUser"
         };
 
@@ -45,6 +47,7 @@ public class DbTestEF
             change.ChangeEntityInfoTest = await context.Set<ChangeEntityInfoTest<Person, int, string>>().SingleAsync(x => Equals(x.Id, changeEntity.Id));
             var originalSaved = change.GetChangedEntity();
             originalSaved.Name = "Jane Smith";
+            change.Address.State = "NJ";
             context.SaveChanges();
         }
 
@@ -53,6 +56,7 @@ public class DbTestEF
             var change = await context.Set<ChangeEntityTest<Person, int, string>>().SingleAsync(x => Equals(changeEntity.Id, x.Id));
             change.ChangeEntityInfoTest = await context.Set<ChangeEntityInfoTest<Person, int, string>>().SingleAsync(x => Equals(x.Id, changeEntity.Id));
             var originalSaved = change.GetChangedEntity();
+            Assert.Equal("NY", change.Address.State);
             Assert.Equal("John Doe", originalSaved.Name);
         }
     }

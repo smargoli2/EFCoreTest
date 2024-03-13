@@ -12,10 +12,10 @@ public class ChangeEntityTestConfiguration<TEntity, TKey, TUserKey> : IEntityTyp
         builder.HasOne(o => o.ChangeEntityInfoTest)
                .WithOne()
                .HasForeignKey<ChangeEntityInfoTest<TEntity, TKey, TUserKey>>(o => o.Id);
-        // builder.OwnsOne(e => e.Object, builder =>
-        // {
-        //     builder.ToJson("Changes");
-        // });
-        //builder.Property(e => e.ChangeEntityInfoTest).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+        builder.OwnsOne(e => e.Address, builder =>
+        {
+            builder.ToJson("AddressJson");
+        });
+        builder.Property(e => e.Address).ValueGeneratedOnAdd().Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
     }
 }

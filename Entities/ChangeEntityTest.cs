@@ -8,10 +8,10 @@ public class ChangeEntityTest<TEntity, TKey, TUserKey> : EntityTest<TKey>
     public State State { get; set; }
     public TUserKey UserId { get; set; }
     public DateTime Date { get; set; }
-    public TKey ObjectId { get; set; }
+    public TKey AddressId { get; set; }
 
-    [ForeignKey(nameof(ObjectId))]
-    public TEntity Object { get; set; }
+    [ForeignKey(nameof(AddressId))]
+    public Address Address { get; set; }
 
     public ChangeEntityInfoTest<TEntity, TKey, TUserKey> ChangeEntityInfoTest { get; set; }
     public TEntity GetChangedEntity()
